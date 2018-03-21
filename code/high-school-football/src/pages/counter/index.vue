@@ -12,7 +12,7 @@
 
 <script>
 // Use Vuex
-import store from './store'
+import store from '../../store/store'
 
 export default {
   computed: {
