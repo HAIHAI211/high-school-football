@@ -13,12 +13,15 @@
         <card :text="motto"></card>
       </div>
     </div>
-      
+
     <form class="form-container">
       <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
       <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
     </form>
     <a href="/pages/counter/counter" class="counter">去往Vuex示例页面</a>
+
+    <a href="/pages/test/test" class="counter">去往test页面</a>
+    <a href="/pages/news/news" class="counter">去往news页面</a>
   </div>
 </template>
 
