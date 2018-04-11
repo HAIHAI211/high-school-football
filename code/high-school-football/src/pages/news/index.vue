@@ -4,7 +4,7 @@
       <div class="news-list">
         <div class="item" v-for="article in articles" :key="article.id">
           <div class="img-wrap">
-            <image class="img" :src="article.thumb"></image>
+            <image class="img" :src="article.thumb" lazy-load></image>
           </div>
           <div class="text-wrap">
             <h2 class="title">{{article.title}}</h2>
