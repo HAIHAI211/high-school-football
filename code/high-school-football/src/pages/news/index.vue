@@ -46,12 +46,7 @@ export default {
       console.log('lower')
     },
     _getNews () {
-      API.request({
-        url: 'https://api.dongqiudi.com/app/tabs/iphone/1.json?mark=gif&version=576&from=msite_com',
-        header: {
-          'content-type': 'application/json' // 默认值
-        }
-      }).then(res => {
+      API.service.getNews().then(res => {
         this.next = res.data.next
         this.articles = res.data.articles
         console.log('next', this.next)

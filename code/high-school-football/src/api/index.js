@@ -41,4 +41,24 @@ Object.keys(wx).forEach((key) => {
     })
   }
 })
+API.service = {
+  getNews () {
+    return API.request({
+      url: 'https://api.dongqiudi.com/app/tabs/iphone/1.json?mark=gif&version=576&from=msite_com',
+      header: {
+        'content-type': 'application/json' // 默认值
+      }
+    })
+  },
+  loginWithCode (code) {
+    return API.request({
+      url: 'https://blogharrison.com/hsfthree/login/c/' + code
+    })
+  },
+  loginWithSession (sessionKey) {
+    return API.request({
+      url: 'https://blogharrison.com/hsfthree/login/s/' + sessionKey
+    })
+  }
+}
 export default API
