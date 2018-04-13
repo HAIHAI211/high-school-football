@@ -1,3 +1,4 @@
+export const UPDATE_USER = 'UPDATE_USER'
 export const LOGIN_IN = 'LOGIN_IN'
 export const LOGIN_OUT = 'LOGIN_OUT'
 export const INCREMENT = 'INCREMENT'

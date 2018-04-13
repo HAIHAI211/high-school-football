@@ -9,7 +9,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     count: 10,
-    isLogin: false
+    isLogin: false,
+    userInfo: {
+      avatarUrl: '/static/hint-avatar.png',
+      nickName: ''
+    }
   },
   getters,
   mutations,
