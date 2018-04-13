@@ -2,8 +2,8 @@
   <div class="counter-warp">
     <p>Vuex counter：{{ count }}</p>
     <p>
-      <button @click="increment">+</button>
-      <button @click="decrement">-</button>
+      <button @click="INCREMENT">+</button>
+      <button @click="DECREMENT">-</button>
     </p>
 
     <a href="/pages/index/index" class="home">去往首页</a>
@@ -12,21 +12,24 @@
 
 <script>
 // Use Vuex
-import store from '../../store/store'
-
+// import store from '../../store/store'
+import {mapState, mapMutations} from 'vuex'
+import {INCREMENT, DECREMENT} from 'store/mutation-types'
 export default {
   computed: {
-    count () {
-      return store.state.count
-    }
+    // count () {
+    //   return this.$store.state.count
+    // }
+    ...mapState(['count'])
   },
   methods: {
-    increment () {
-      store.commit('increment')
-    },
-    decrement () {
-      store.commit('decrement')
-    }
+    // increment () {
+    //   this.$store.commit('increment')
+    // },
+    // decrement () {
+    //   this.$store.commit('decrement')
+    // }
+    ...mapMutations([INCREMENT, DECREMENT])
   }
 }
 
