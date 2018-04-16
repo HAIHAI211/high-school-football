@@ -25,7 +25,7 @@
         <m-loading></m-loading>
       </div>
     </scroll-view>
-    <navigator class="add-btn" url="/pages/appoint-add/appoint-add">+</navigator>
+    <div class="add-btn" @click="_tapAdd">+</div>
     <m-bottom-bar active="appoint"></m-bottom-bar>
   </div>
 </template>
@@ -34,6 +34,7 @@
   import MBottomBar from 'components/m-bottom-bar/m-bottom-bar'
   import MLoading from 'components/m-loading/m-loading'
   import API from 'api/index'
+  import {mapState} from 'vuex'
   export default {
     components: {
       MBottomBar,
@@ -61,33 +62,49 @@
         }]
       }
     },
+    computed: {
+      ...mapState(['isLogin'])
+    },
     created () {
-
     },
     methods: {
+      _tapLogic (item) {
+        API.showModal({
+          title: '提示',
+          content: item.isJoin ? '确认退出该约球活动？' : '确认报名？'
+        }).then(res => {
+          if (res.confirm) { // 点击了确认
+            item.loading = true
+            item.disabled = true
+            setTimeout(function () {
+              API.showToast({
+                title: item.isJoin ? '退出成功' : '加入成功',
+                icon: 'success',
+                duration: 2000
+              })
+              item.loading = false
+              item.disabled = false
+              item.isJoin = !item.isJoin
+            }, 1500)
+          }
+        })
+      },
       _tap (index) {
-        let item = this.appoints[index]
-        if (!item.isJoin) {
-          API.showModal({
-            title: '提示',
-            content: '确认报名？'
-          }).then(res => {
-            if (res.confirm) { // 点击了确认
-              item.loading = true
-              item.disabled = true
-              setTimeout(function () {
-                API.showToast({
-                  title: '加入成功',
-                  icon: 'success',
-                  duration: 2000
-                })
-                item.loading = false
-                item.disabled = false
-                item.isJoin = true
-              }, 1500)
-            }
+        if (!this.isLogin) {
+          API.navigateTo({
+            url: '/pages/login/login'
           })
+          return
         }
+        let item = this.appoints[index]
+        this._tapLogic(item)
+      },
+      _tapAdd () {
+        console.log('_tapAdd isLogin', this.isLogin)
+        let url = {
+          url: this.isLogin ? '/pages/appoint-add/appoint-add' : '/pages/login/login'
+        }
+        API.navigateTo(url)
       }
     }
   }
