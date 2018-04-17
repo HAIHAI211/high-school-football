@@ -25,10 +25,6 @@
     },
     data () {
       return {
-        // userInfo: {
-        //   avatarUrl: '/static/hint-avatar.png',
-        //   nickName: ''
-        // },
         loading: true,
         disabled: true,
         size: 50,
@@ -51,22 +47,34 @@
           this.disabled = false
         })
       },
-      _login () {
+      _login () { // 此时还没有登录
         this.loading = true
         this.disabled = true
-        API.login().then(res => {
-          this.loading = false
-          this.disabled = false
-          if (res.code) {
-            // API.service.loginWithCode(res.code).then(res => {
-            //   if (res.code === 0) { // 服务器返回成功
-            //     wx.setStorageSync('sessionKey', res.data.sessionKey)
-            //     this[LOGIN_IN]()
-            //   }
-            // })
-            this[LOGIN_IN]()
-          }
-        })
+
+        // 判断本地sessionKey是否存在
+        // 标准 但是复杂
+        const sessionId = wx.getStorageSync('sessionId')
+        if (sessionId) {
+          console.log('sessionId有效')
+          API.service.loginWithSession(sessionId).then(res => {
+            console.log('session login res', res)
+          })
+        } else {
+          console.log('sessionId无效')
+          API.login().then(res => {
+            if (res.code) {
+              API.service.loginWithCode(res.code, this.userInfo.avatarUrl, this.userInfo.nickName).then(res => {
+                this.loading = false
+                this.disabled = false
+                console.log('code login res.data', res.data)
+                if (res.data && res.data.code === 0) {
+                  wx.setStorageSync('sessionId', res.data.data)
+                  this[LOGIN_IN]()
+                }
+              })
+            }
+          })
+        }
       }
     },
     mounted () {

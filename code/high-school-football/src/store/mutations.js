@@ -13,7 +13,7 @@ export default {
   [LOGIN_OUT] (state, v) {
     console.log('登出了呵呵')
     state.isLogin = false
-    state.userInfo.avatarUrl = '/static/hint-avatar.png'
+    state.userInfo.avatarUrl = ''
     state.userInfo.nickName = ''
   },
   [DECREMENT] (state, v) {

@@ -1,6 +1,6 @@
 <template>
   <div class="userinfo">
-    <img class="userinfo-avatar" :src="userInfo.avatarUrl" background-size="cover" :class="{'large-avatar': size === 'large'}"/>
+    <img class="userinfo-avatar" :src="userInfo.avatarUrl == '' ? '/static/hint-avatar.png': userInfo.avatarUrl" background-size="cover" :class="{'large-avatar': size === 'large'}"/>
     <div class="userinfo-nickname"  :class="{'large-nickname': size === 'large'}">
       {{userInfo.nickName}}
     </div>

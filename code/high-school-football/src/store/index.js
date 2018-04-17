@@ -11,7 +11,7 @@ const store = new Vuex.Store({
     count: 10,
     isLogin: false,
     userInfo: {
-      avatarUrl: '/static/hint-avatar.png',
+      avatarUrl: '',
       nickName: ''
     }
   },

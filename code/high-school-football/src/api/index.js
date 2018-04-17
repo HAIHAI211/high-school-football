@@ -41,6 +41,9 @@ Object.keys(wx).forEach((key) => {
     })
   }
 })
+const TEST_ORIGIN = 'http://localhost:8081/'
+// const TRUE_ORIGIN = 'https://blogharrison.com/hsfthree/'
+const USE_ORIGIN = TEST_ORIGIN
 API.service = {
   getNews () {
     return API.request({
@@ -50,14 +53,17 @@ API.service = {
       }
     })
   },
-  loginWithCode (code) {
+  loginWithCode (code, avatar, nickName) {
     return API.request({
-      url: 'https://blogharrison.com/hsfthree/login/c/' + code
+      url: USE_ORIGIN + 'login/c/' + code + '?avatar=' + avatar + '&nickName=' + nickName,
+      header: {
+        'content-type': 'application/json'
+      }
     })
   },
   loginWithSession (sessionKey) {
     return API.request({
-      url: 'https://blogharrison.com/hsfthree/login/s/' + sessionKey
+      url: USE_ORIGIN + 'login/s/' + sessionKey
     })
   }
 }
