@@ -1,7 +1,7 @@
 <template>
   <div class="site-item">
     <div class="img-wrap">
-      <image class="img" :src="marker.pics[0]"></image>
+      <image class="img" :src="marker.pic"></image>
     </div>
     <div class="text-wrap">
       <div class="top-wrap">
@@ -17,8 +17,8 @@
       <scroll-view class="tag-scroll-view" scroll-x>
         <div class="tag-wrap">
           <div class="tag" v-if="marker.hasLight">有灯光</div>
-          <div class="tag">{{marker.turfType.label}}</div>
-          <div class="tag">场地质量{{marker.siteQuality.label}}</div>
+          <div class="tag">{{turfType[marker.turfType].label}}</div>
+          <div class="tag">场地质量{{siteQuality[marker.siteQuality].label}}</div>
           <div class="tag">{{marker.siteType}}人场</div>
           <div class="tag">环境清净</div>
         </div>
@@ -28,6 +28,7 @@
 </template>
 <script>
   import {getDistance} from 'common/js/map.js'
+  import {turfType, siteQuality} from 'pages/site/config'
   export default {
     props: {
       marker: {
@@ -43,11 +44,16 @@
         default: 0
       }
     },
+    data () {
+      return {
+        turfType: turfType,
+        siteQuality: siteQuality
+      }
+    },
     computed: {
       distance () {
         let result = getDistance(this.locationLng, this.locationLat, this.marker.longitude, this.marker.latitude)
         result = (result / 1000).toFixed(2)
-        console.log('xxx', result)
         return result
       }
     }

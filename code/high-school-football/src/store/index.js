@@ -13,7 +13,9 @@ const store = new Vuex.Store({
     userInfo: {
       avatarUrl: '',
       nickName: ''
-    }
+    },
+    sites: [],
+    selectedSiteId: -1
   },
   getters,
   mutations,

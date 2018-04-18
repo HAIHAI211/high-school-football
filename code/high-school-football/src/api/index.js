@@ -53,6 +53,14 @@ API.service = {
       }
     })
   },
+  async getSites () {
+    return API.request({
+      url: USE_ORIGIN + 'site/find',
+      header: {
+        'content-type': 'application/json'
+      }
+    })
+  },
   async loginWithCode (code, avatar, nickName) {
     return API.request({
       url: USE_ORIGIN + 'login/c/' + code + '?avatar=' + avatar + '&nickName=' + nickName,

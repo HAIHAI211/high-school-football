@@ -1,10 +1,14 @@
-const markBase = {
+export const markBase = {
   iconPath: '/static/mark1.png',
   width: 50,
   height: 50
 }
-
-const turfType = [
+export const selectedMarkBase = {
+  iconPath: '/static/mark.png',
+  width: 55,
+  height: 55
+}
+export const turfType = [
   {
     index: 0,
     label: '人工草皮'
@@ -22,7 +26,7 @@ const turfType = [
     label: '沙土球场'
   }
 ]
-const siteQuality = [
+export const siteQuality = [
   {
     index: 0,
     label: '完美'

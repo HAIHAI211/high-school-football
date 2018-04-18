@@ -45,15 +45,10 @@ export default {
     _lower () {
       console.log('lower')
     },
-    _getNews () {
-      API.service.getNews().then(res => {
-        this.next = res.data.next
-        this.articles = res.data.articles
-        console.log('next', this.next)
-        console.log('articles', this.articles)
-      }).catch(err => {
-        console.log(err)
-      })
+    async _getNews () {
+      let res = await API.service.getNews()
+      this.next = res.data.next
+      this.articles = res.data.articles
     }
   }
 }

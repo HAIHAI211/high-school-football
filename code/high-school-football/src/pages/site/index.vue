@@ -1,11 +1,11 @@
 <template>
-  <div id="site">
+  <div id="site" v-if="markers.length">
     <div class="site-map-wrap" v-if="!showSiteList">
       <map class="map" :longitude="lng" :latitude="lat"
            :markers="markers" :show-location="showLocation"
            @markertap="_markertap" @updated="_updated"></map>
       <div class="show-all-site" @click="showSiteList=true"><span class="text">查看所有球场</span><image class="icon" src="/static/arrow-up.png"></image></div>
-      <div class="selected-site">
+      <div class="selected-site" v-if="selectedMarker">
         <m-site-item :marker="selectedMarker" :location-lat="locationLat" :location-lng="locationLng"></m-site-item>
       </div>
     </div>
@@ -25,9 +25,9 @@
 <script>
   import MBottomBar from 'components/m-bottom-bar/m-bottom-bar'
   import MSiteItem from 'components/m-site-item/m-site-item'
-  import {markers} from './config.js'
-  import {getDistance} from 'common/js/map.js'
   import API from 'api/index'
+  import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
+  import {UPDATE_SELECTED_SITE_ID} from 'store/mutation-types'
   export default {
     components: {
       MBottomBar,
@@ -39,27 +39,27 @@
         locationLat: 0,
         lng: 103.9929342270,
         lat: 30.7616777222,
-        markers: markers,
+        // markers: markers,
         showLocation: true,
-        selectedId: 0,
         showSiteList: false
       }
     },
     computed: {
-      selectedMarker () {
-        return this.markers[this.selectedId]
-      },
-      getDistance () {
-        let result = getDistance(this.locationLng, this.locationLat, this.selectedMarker.longitude, this.selectedMarker.latitude)
-        result = (result / 1000).toFixed(2)
-        console.log('xxx', result)
-        return result
+      ...mapState(['sites']),
+      ...mapGetters(['markers', 'selectedMarker'])
+    },
+    mounted () {
+      this._getLocation()
+      if (this._.isEmpty(this.sites)) {
+        console.log('sites为空 现在去请求sites')
+        this.updateSites()
       }
     },
-    created () {
-      this._getLocation()
+    watch: {
     },
     methods: {
+      ...mapMutations([UPDATE_SELECTED_SITE_ID]),
+      ...mapActions(['updateSites']),
       _getLocation () {
         API.getLocation().then(res => {
           this.locationLng = res.longitude
@@ -68,13 +68,8 @@
         })
       },
       _markertap (e) {
-        console.log(e.mp.markerId)
-        if (this.selectedId !== e.mp.markerId) {
-          this.$set(this.markers, e.mp.markerId, Object.assign(this.markers[e.mp.markerId], {iconPath: '/static/mark.png'}))
-          this.$set(this.markers, this.selectedId, Object.assign(this.markers[this.selectedId], {iconPath: '/static/mark1.png'}))
-          this.selectedId = e.mp.markerId
-          console.log('markers', this.markers)
-        }
+        console.log('markerTap', e.mp.markerId)
+        this[UPDATE_SELECTED_SITE_ID](e.mp.markerId)
       },
       _updated () {
       }

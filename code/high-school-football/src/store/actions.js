@@ -1,4 +1,4 @@
-import {LOGIN_IN} from './mutation-types'
+import {LOGIN_IN, UPDATE_SITES, UPDATE_SELECTED_SITE_ID} from './mutation-types'
 import API from 'api'
 import _ from 'lodash'
 import {SET_SESSION} from 'utils'
@@ -17,5 +17,14 @@ export default {
       }
       return result
     }
+  },
+  async updateSites ({commit, state}) {
+    let res = await API.service.getSites()
+    let sites = res.data
+    console.log('sites:', sites)
+    commit(UPDATE_SITES, sites)
+    console.log('sites[0].id:', sites[0].id)
+    commit(UPDATE_SELECTED_SITE_ID, sites[0].id)
+    return sites
   }
 }
