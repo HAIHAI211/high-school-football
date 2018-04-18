@@ -2,8 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import 'common/stylus/index.styl'
+import _ from 'lodash'
 Vue.config.productionTip = false
 Vue.prototype.$store = store
+Vue.prototype._ = _
 App.mpType = 'app'
 
 const app = new Vue(App)

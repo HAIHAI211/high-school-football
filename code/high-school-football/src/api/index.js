@@ -45,7 +45,7 @@ const TEST_ORIGIN = 'http://localhost:8081/'
 // const TRUE_ORIGIN = 'https://blogharrison.com/hsfthree/'
 const USE_ORIGIN = TEST_ORIGIN
 API.service = {
-  getNews () {
+  async getNews () {
     return API.request({
       url: 'https://api.dongqiudi.com/app/tabs/iphone/1.json?mark=gif&version=576&from=msite_com',
       header: {
@@ -53,7 +53,7 @@ API.service = {
       }
     })
   },
-  loginWithCode (code, avatar, nickName) {
+  async loginWithCode (code, avatar, nickName) {
     return API.request({
       url: USE_ORIGIN + 'login/c/' + code + '?avatar=' + avatar + '&nickName=' + nickName,
       header: {
@@ -61,9 +61,12 @@ API.service = {
       }
     })
   },
-  loginWithSession (sessionKey) {
+  async loginWithSession (sessionKey) {
     return API.request({
-      url: USE_ORIGIN + 'login/s/' + sessionKey
+      url: USE_ORIGIN + 'login/s/' + sessionKey,
+      header: {
+        'content-type': 'application/json'
+      }
     })
   }
 }

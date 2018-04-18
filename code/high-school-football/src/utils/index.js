@@ -18,3 +18,12 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
+export function SET_SESSION (sessionId) {
+  console.log('SET_SESSION')
+  wx.setStorageSync('sessionId', sessionId)
+}
+
+export function GET_SESSION () {
+  return wx.getStorageSync('sessionId')
+}
+

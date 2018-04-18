@@ -15,9 +15,10 @@
 </template>
 <script>
   import API from 'api'
-  import {mapState, mapMutations} from 'vuex'
+  import {mapState, mapMutations, mapActions} from 'vuex'
   import {LOGIN_IN, UPDATE_USER} from 'store/mutation-types'
   import MUserInfo from 'components/m-user-info/m-user-info'
+  import {SET_SESSION, GET_SESSION} from 'utils'
 
   export default {
     components: {
@@ -36,6 +37,7 @@
     },
     methods: {
       ...mapMutations([LOGIN_IN, UPDATE_USER]),
+      ...mapActions(['loginByCode']),
       _getUserInfo () {
         // 调用登录接口
         API.getUserInfo().then(res => {
@@ -47,33 +49,31 @@
           this.disabled = false
         })
       },
-      _login () { // 此时还没有登录
+      async _login () { // 此时还没有登录
         this.loading = true
         this.disabled = true
 
         // 判断本地sessionKey是否存在
         // 标准 但是复杂
-        const sessionId = wx.getStorageSync('sessionId')
+        const sessionId = GET_SESSION()
+        console.log('本地取出的sessionId:', sessionId)
         if (sessionId) {
-          console.log('sessionId有效')
-          API.service.loginWithSession(sessionId).then(res => {
-            console.log('session login res', res)
-          })
+          let res = await API.service.loginWithSession(sessionId)
+          let result = res.data
+          if (result.code === 0) { // sessionId有效
+            console.log('sessionId有效')
+            SET_SESSION(result.data)
+            this.loading = false
+            this.disabled = false
+            this[LOGIN_IN]()
+          } else { // session失效
+            console.log('sessionId失效')
+            // this._loginActionsWhenSessionIdUseless()
+            this.loginByCode()
+          }
         } else {
           console.log('sessionId无效')
-          API.login().then(res => {
-            if (res.code) {
-              API.service.loginWithCode(res.code, this.userInfo.avatarUrl, this.userInfo.nickName).then(res => {
-                this.loading = false
-                this.disabled = false
-                console.log('code login res.data', res.data)
-                if (res.data && res.data.code === 0) {
-                  wx.setStorageSync('sessionId', res.data.data)
-                  this[LOGIN_IN]()
-                }
-              })
-            }
-          })
+          this.loginByCode()
         }
       }
     },
