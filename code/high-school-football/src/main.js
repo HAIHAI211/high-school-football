@@ -3,9 +3,11 @@ import App from './App'
 import store from './store'
 import 'common/stylus/index.styl'
 import _ from 'lodash'
+import moment from 'moment'
 Vue.config.productionTip = false
 Vue.prototype.$store = store
 Vue.prototype._ = _
+Vue.prototype.$moment = moment
 App.mpType = 'app'
 
 const app = new Vue(App)

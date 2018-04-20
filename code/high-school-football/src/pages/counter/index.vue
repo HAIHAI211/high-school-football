@@ -1,50 +1,60 @@
 <template>
-  <div class="counter-warp">
-    <p>Vuex counter：{{ count }}</p>
-    <p>
-      <button @click="INCREMENT">+</button>
-      <button @click="DECREMENT">-</button>
-    </p>
-
-    <a href="/pages/index/index" class="home">去往首页</a>
+<div id="page">
+  <div class="img-container">
+    <div class="img-wrap" v-for="img in imgs">
+      <img :src="img" alt="" class="img">
+    </div>
   </div>
+</div>
 </template>
 
 <script>
-// Use Vuex
-// import store from '../../store/store'
-import {mapState, mapMutations} from 'vuex'
-import {INCREMENT, DECREMENT} from 'store/mutation-types'
 export default {
-  computed: {
-    // count () {
-    //   return this.$store.state.count
-    // }
-    ...mapState(['count'])
+  data () {
+    return {
+      imgs: []
+    }
   },
-  methods: {
-    // increment () {
-    //   this.$store.commit('increment')
-    // },
-    // decrement () {
-    //   this.$store.commit('decrement')
-    // }
-    ...mapMutations([INCREMENT, DECREMENT])
+  created () {
+    let date = this.$moment().toDate()
+    console.log('date', date)
+
+    let formateDate = this.$moment().format('YYYY-MM-DD')
+    console.log('formateDate', formateDate)
+
+    let DaysAfterDate = this.$moment().add(+15, 'day').format('YYYY-MM-DD')
+    console.log('15天后', DaysAfterDate)
+
+    for (let i = 0; i < 9; i++) {
+      if (i % 2 === 0) {
+        this.imgs.push('/static/site1.jpg')
+      } else {
+        this.imgs.push('/static/site2.jpg')
+      }
+    }
   }
 }
 
 </script>
-<style>
-.counter-warp {
-  text-align: center;
-  margin-top: 100px;
-}
-.home {
-  display: inline-block;
-  margin: 100px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
-}
+<style lang="stylus" rel="stylesheet/stylus" scoped>
+  #page
+    position fixed
+    top 0
+    bottom 0
+    left 0
+    right 0
+    background white
+    .img-container
+      display flex
+      flex-wrap wrap
+      .img-wrap
+        flex 0 0 auto
+        width 33.33%
+        background lightblue
+        display flex
+        .img
+          flex 1 0 0
+          height 120px
+          margin 10px
 
 </style>

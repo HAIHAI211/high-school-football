@@ -19,10 +19,26 @@
       </div>
       <div class="section">
         <div class="section-key">
-          <span>选择场馆</span>
+          <span>约定场馆</span>
         </div>
         <div class="section-value">
-          <switch name="switch" color="#ffcd32"/>
+          <picker class="picker" @change="_SitePickerChange" :value="index" :range="sites" v-if="sites.length" range-key="title">
+            <view class="picker-view">
+              {{sites[index].title}}
+            </view>
+          </picker>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-key">
+          <span>约定时间</span>
+        </div>
+        <div class="section-value">
+          <!--<picker class="picker" mode="date" :value="date" start="startDate" end="endDate" @change="_DatePickerChange">-->
+            <!--<view class="picker-view">-->
+              <!--日期: {{date}}-->
+            <!--</view>-->
+          <!--</picker>-->
         </div>
       </div>
       <!--<div class="section section_gap">-->
@@ -61,20 +77,43 @@
 </template>
 <script>
   // import API from 'api/index'
+  import {mapState, mapActions} from 'vuex'
+  // import {UPDATE_SITES} from 'store/mutation-types'
   export default {
     components: {
     },
 
     data () {
       return {
+        array: ['美国', '中国', '巴西', '日本'],
+        index: 0
+        // now: this._.now(),
+        // date: ''
       }
     },
-    created () {
+    computed: {
+      ...mapState(['sites']),
+      startDate () {
+      }
+    },
+    mounted () {
+      if (this._.isEmpty(this.sites)) {
+        this.updateSites()
+      }
     },
     methods: {
+      ...mapActions(['updateSites']),
       _formReset () {},
       _formSubmit (e) {
         console.log(e.detail.value)
+      },
+      _SitePickerChange (e) {
+        console.log('sitePicker发送选择改变，携带值为', e.detail.value)
+        this.index = e.detail.value
+      },
+      _DatePickerChange (e) {
+        console.log('datePicker发送选择改变，携带值为', e.detail.value)
+        this.index = e.detail.value
       }
     }
   }
@@ -97,5 +136,11 @@
         justify-content flex-end
         .slider
           width 100%
+        .picker
+          center()
+          .picker-view
+            font-size $font-size-small
+            color $color-text-d
+            no-wrap()
 
 </style>
