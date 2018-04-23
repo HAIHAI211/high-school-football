@@ -34,44 +34,13 @@
           <span>约定时间</span>
         </div>
         <div class="section-value">
-          <!--<picker class="picker" mode="date" :value="date" start="startDate" end="endDate" @change="_DatePickerChange">-->
-            <!--<view class="picker-view">-->
-              <!--日期: {{date}}-->
-            <!--</view>-->
-          <!--</picker>-->
+          <picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="_DatePickerChange">
+            <view class="picker-view">
+              日期: {{date}}
+            </view>
+          </picker>
         </div>
       </div>
-      <!--<div class="section section_gap">-->
-        <!--<div class="section__title">switch</div>-->
-        <!--<switch name="switch"/>-->
-      <!--</div>-->
-      <!--<div class="section section_gap">-->
-        <!--<div class="section__title">slider</div>-->
-        <!--<slider name="slider" show-value ></slider>-->
-      <!--</div>-->
-
-      <!--<div class="section">-->
-        <!--<div class="section__title">input</div>-->
-        <!--<input name="input" placeholder="please input here" />-->
-      <!--</div>-->
-      <!--<div class="section section_gap">-->
-        <!--<div class="section__title">radio</div>-->
-        <!--<radio-group name="radio-group">-->
-          <!--<label><radio value="radio1"/>radio1</label>-->
-          <!--<label><radio value="radio2"/>radio2</label>-->
-        <!--</radio-group>-->
-      <!--</div>-->
-      <!--<div class="section section_gap">-->
-        <!--<div class="section__title">checkbox</div>-->
-        <!--<checkbox-group name="checkbox">-->
-          <!--<label><checkbox value="checkbox1"/>checkbox1</label>-->
-          <!--<label><checkbox value="checkbox2"/>checkbox2</label>-->
-        <!--</checkbox-group>-->
-      <!--</div>-->
-      <!--<div class="btn-area">-->
-        <!--<button formType="submit">Submit</button>-->
-        <!--<button formType="reset">Reset</button>-->
-      <!--</div>-->
     </form>
   </div>
 </template>
@@ -86,15 +55,16 @@
     data () {
       return {
         array: ['美国', '中国', '巴西', '日本'],
-        index: 0
+        index: 0,
+        date: this._addDay(1),
+        startDate: this._addDay(1),
+        endDate: this._addDay(15)
         // now: this._.now(),
         // date: ''
       }
     },
     computed: {
-      ...mapState(['sites']),
-      startDate () {
-      }
+      ...mapState(['sites'])
     },
     mounted () {
       if (this._.isEmpty(this.sites)) {
@@ -103,17 +73,20 @@
     },
     methods: {
       ...mapActions(['updateSites']),
+      _addDay (days) {
+        return this.$moment().add(days, 'day').format('YYYY-MM-DD')
+      },
       _formReset () {},
       _formSubmit (e) {
         console.log(e.detail.value)
       },
       _SitePickerChange (e) {
-        console.log('sitePicker发送选择改变，携带值为', e.detail.value)
-        this.index = e.detail.value
+        console.log('sitePicker发送选择改变，携带值为', e.mp.detail.value)
+        this.index = e.mp.detail.value
       },
       _DatePickerChange (e) {
-        console.log('datePicker发送选择改变，携带值为', e.detail.value)
-        this.index = e.detail.value
+        console.log('datePicker发送选择改变，携带值为', e.mp.detail.value)
+        this.date = e.mp.detail.value
       }
     }
   }
