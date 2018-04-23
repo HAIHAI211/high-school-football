@@ -6,15 +6,7 @@
           <span>需要人数</span>
         </div>
         <div class="section-value">
-          <slider class="slider" name="slider" show-value min="1" max="11" activeColor="#ffcd32"></slider>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-key">
-          <span>自己参加</span>
-        </div>
-        <div class="section-value">
-          <switch name="switch" color="#ffcd32"/>
+          <slider class="slider" name="slider" show-value min="1" max="11" activeColor="#ffcd32" :value="allCount" @change="_allCountSliderChange"></slider>
         </div>
       </div>
       <div class="section">
@@ -22,9 +14,21 @@
           <span>约定场馆</span>
         </div>
         <div class="section-value">
-          <picker class="picker" @change="_SitePickerChange" :value="index" :range="sites" v-if="sites.length" range-key="title">
+          <picker class="picker" @change="_SitePickerChange" :value="siteIndex" :range="sites" v-if="sites.length" range-key="title">
             <view class="picker-view">
-              {{sites[index].title}}
+              {{sites[siteIndex].title}}
+            </view>
+          </picker>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-key">
+          <span>人均费用</span>
+        </div>
+        <div class="section-value">
+          <picker class="picker" @change="_costPickerChange" :value="costIndex" :range="costs">
+            <view class="picker-view">
+              {{costs[costIndex]}}元
             </view>
           </picker>
         </div>
@@ -34,19 +38,30 @@
           <span>约定时间</span>
         </div>
         <div class="section-value">
-          <picker class="picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="_DatePickerChange">
+          <picker class="picker date-picker" mode="date" :value="date" :start="startDate" :end="endDate" @change="_DatePickerChange">
             <view class="picker-view">
-              日期: {{date}}
+              {{date}}
+            </view>
+          </picker>
+          <picker class="picker" mode="time" :value="time" :start="startTime" :end="endTime" @change="_timePickerChange">
+            <view class="picker-view">
+              {{time}}
             </view>
           </picker>
         </div>
       </div>
+      <div class="btn-wrap"  v-if="!isLogin">
+        <button type="primary" size="default" :loading="submitLoading"
+                :disabled="submitDisabled" @tap="_submit"> 提交 </button>
+      </div>
+
     </form>
   </div>
 </template>
 <script>
-  // import API from 'api/index'
+  import API from 'api/index'
   import {mapState, mapActions} from 'vuex'
+  import {GET_SESSION} from 'utils'
   // import {UPDATE_SITES} from 'store/mutation-types'
   export default {
     components: {
@@ -55,10 +70,16 @@
     data () {
       return {
         array: ['美国', '中国', '巴西', '日本'],
-        index: 0,
+        siteIndex: 0,
+        costIndex: 0,
         date: this._addDay(1),
         startDate: this._addDay(1),
-        endDate: this._addDay(15)
+        endDate: this._addDay(15),
+        time: '09:00',
+        startTime: '09:00',
+        endTime: '21:00',
+        costs: this._initCosts(),
+        allCount: 1
         // now: this._.now(),
         // date: ''
       }
@@ -73,8 +94,31 @@
     },
     methods: {
       ...mapActions(['updateSites']),
+      _allCountSliderChange (e) {
+        console.log('allCountSlider发送选择改变，携带值为', e.mp.detail.value)
+        this.allCount = e.mp.detail.value
+      },
+      _initCosts () {
+        let result = []
+        for (let i = 0; i < 51; i++) {
+          result.push(i)
+        }
+        return result
+      },
       _addDay (days) {
         return this.$moment().add(days, 'day').format('YYYY-MM-DD')
+      },
+      _submit () {
+        console.log('sessionId', GET_SESSION())
+        let appointTime = this.$moment(this.date + ' ' + this.time).format('X')
+        let allCount = this.allCount
+        let siteId = this.sites[this.siteIndex].id
+        let perCost = this.costs[this.costIndex]
+        console.log('appointTime', appointTime)
+        console.log('allCount', allCount)
+        console.log('siteId', siteId)
+        console.log('perCost', perCost)
+        API.service.addAppoint(GET_SESSION(), appointTime, allCount, siteId, perCost)
       },
       _formReset () {},
       _formSubmit (e) {
@@ -82,11 +126,19 @@
       },
       _SitePickerChange (e) {
         console.log('sitePicker发送选择改变，携带值为', e.mp.detail.value)
-        this.index = e.mp.detail.value
+        this.siteIndex = e.mp.detail.value
+      },
+      _costPickerChange (e) {
+        console.log('costPicker发送选择改变，携带值为', e.mp.detail.value)
+        this.costIndex = e.mp.detail.value
       },
       _DatePickerChange (e) {
         console.log('datePicker发送选择改变，携带值为', e.mp.detail.value)
         this.date = e.mp.detail.value
+      },
+      _timePickerChange (e) {
+        console.log('timePicker发送选择改变，携带值为', e.mp.detail.value)
+        this.time = e.mp.detail.value
       }
     }
   }
@@ -96,6 +148,8 @@
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
   #appoint-add
+    .btn-wrap
+      padding 0 40rpx
     .section
       border-bottom 1px solid $color-text-d
       display flex
@@ -115,5 +169,7 @@
             font-size $font-size-small
             color $color-text-d
             no-wrap()
+          &.date-picker
+            margin-right 20rpx
 
 </style>

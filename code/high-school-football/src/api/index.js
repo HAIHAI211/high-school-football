@@ -76,6 +76,17 @@ API.service = {
         'content-type': 'application/json'
       }
     })
+  },
+  async addAppoint (sessionId, appointTime, allCount, siteId, perCost) {
+    return API.request({
+      url: USE_ORIGIN + 'appoint/add',
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: 'sessionId=' + sessionId + '&appointTime=' +
+      appointTime + '&allCount=' + allCount + '&siteId=' + siteId + '&perCost=' + perCost
+    })
   }
 }
 export default API
