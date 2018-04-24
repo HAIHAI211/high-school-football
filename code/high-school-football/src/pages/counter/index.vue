@@ -24,14 +24,6 @@ export default {
 
     let DaysAfterDate = this.$moment().add(+15, 'day').format('YYYY-MM-DD')
     console.log('15天后', DaysAfterDate)
-
-    for (let i = 0; i < 9; i++) {
-      if (i % 2 === 0) {
-        this.imgs.push('/static/site1.jpg')
-      } else {
-        this.imgs.push('/static/site2.jpg')
-      }
-    }
   }
 }
 

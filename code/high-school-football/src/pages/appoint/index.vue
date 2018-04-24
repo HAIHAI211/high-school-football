@@ -34,7 +34,8 @@
   import MBottomBar from 'components/m-bottom-bar/m-bottom-bar'
   import MLoading from 'components/m-loading/m-loading'
   import API from 'api/index'
-  import {mapState} from 'vuex'
+  import {mapState, mapActions, mapMutations} from 'vuex'
+  import {LOGIN_IN, LOGIN_OUT} from 'store/mutation-types'
   export default {
     components: {
       MBottomBar,
@@ -63,11 +64,38 @@
       }
     },
     computed: {
-      ...mapState(['isLogin'])
+      ...mapState(['isLogin', 'sites'])
     },
     created () {
     },
+    onShow () {
+      console.log('show')
+      if (!this.isLogin) {
+        console.log('未登录哦')
+        this._toLoginPage()
+      } else {
+        if (this._.isEmpty(this.sites)) {
+          console.log('sites为空 现在去请求sites')
+          this.updateSites().then(res => {
+            this._getAppoints()
+          })
+        } else {
+          this._getAppoints()
+        }
+      }
+    },
     methods: {
+      ...mapActions(['updateSites']),
+      ...mapMutations([LOGIN_IN, LOGIN_OUT]),
+      _toLoginPage () {
+        API.navigateTo({
+          url: '/pages/login/login'
+        })
+      },
+      async _getAppoints () {
+        let res = await API.service.getAppoints()
+        console.log('getAppoints', res)
+      },
       _tapLogic (item) {
         API.showModal({
           title: '提示',

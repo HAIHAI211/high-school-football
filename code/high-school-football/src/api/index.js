@@ -3,6 +3,9 @@
  * @describe 对小程序异步方法进行promise封装
  * @date 2018.04.03
  */
+
+// import {param} from 'utils'
+import {GET_SESSION} from 'utils'
 const API = {}
 // 遍历wx进行封装
 Object.keys(wx).forEach((key) => {
@@ -86,6 +89,14 @@ API.service = {
       },
       data: 'sessionId=' + sessionId + '&appointTime=' +
       appointTime + '&allCount=' + allCount + '&siteId=' + siteId + '&perCost=' + perCost
+    })
+  },
+  async getAppoints () {
+    return API.request({
+      url: USE_ORIGIN + 'appoint/find' + '?' + 'sessionId=' + GET_SESSION(),
+      header: {
+        'content-type': 'application/json'
+      }
     })
   }
 }

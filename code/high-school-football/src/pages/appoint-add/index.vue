@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="btn-wrap"  v-if="!isLogin">
-        <button type="primary" size="default" :loading="submitLoading"
+        <button class="submit-btn" type="primary" size="default" :loading="submitLoading"
                 :disabled="submitDisabled" @tap="_submit"> 提交 </button>
       </div>
 
@@ -79,9 +79,9 @@
         startTime: '09:00',
         endTime: '21:00',
         costs: this._initCosts(),
-        allCount: 1
-        // now: this._.now(),
-        // date: ''
+        allCount: 1,
+        submitLoading: false,
+        submitDisabled: false
       }
     },
     computed: {
@@ -108,9 +108,11 @@
       _addDay (days) {
         return this.$moment().add(days, 'day').format('YYYY-MM-DD')
       },
-      _submit () {
+      async _submit () {
+        this.submitDisabled = true
+        this.submitLoading = true
         console.log('sessionId', GET_SESSION())
-        let appointTime = this.$moment(this.date + ' ' + this.time).format('X')
+        let appointTime = this.$moment(this.date + ' ' + this.time).format('X') * 1000
         let allCount = this.allCount
         let siteId = this.sites[this.siteIndex].id
         let perCost = this.costs[this.costIndex]
@@ -118,7 +120,12 @@
         console.log('allCount', allCount)
         console.log('siteId', siteId)
         console.log('perCost', perCost)
-        API.service.addAppoint(GET_SESSION(), appointTime, allCount, siteId, perCost)
+        let res = await API.service.addAppoint(GET_SESSION(), appointTime, allCount, siteId, perCost)
+        console.log('addAppoint res', res)
+        this.submitDisabled = false
+        this.submitLoading = false
+        wx.navigateBack()
+        // wx.navigateBack()
       },
       _formReset () {},
       _formSubmit (e) {
@@ -149,7 +156,10 @@
   @import "~common/stylus/mixin"
   #appoint-add
     .btn-wrap
-      padding 0 40rpx
+      padding 40rpx 40rpx
+      .submit-btn
+        height 90rpx
+        line-height 90rpx
     .section
       border-bottom 1px solid $color-text-d
       display flex
