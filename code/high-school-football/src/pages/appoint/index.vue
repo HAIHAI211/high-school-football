@@ -4,19 +4,19 @@
       <div class="appoint-list">
         <div class="item" v-for="(item,index) in appoints" :key="item.id">
           <div class="creator-info">
-            <image class="avatar" lazy-load :src="item.avatar"/>
-            <span class="title">{{item.nickName}}</span>
+            <image class="avatar" lazy-load :src="item.creator.avatar"/>
+            <span class="title">{{item.creator.name}}</span>
           </div>
           <div class="appoint-info">
-            <p class="appoint-info-item">{{item.appointTime}}</p>
-            <p class="appoint-info-item">{{item.siteTitle + '  ' + item.siteType + '人制'}}</p>
-            <p class="appoint-info-item">{{item.cost}}</p>
+            <p class="appoint-info-item">{{item.formatTime}}</p>
+            <p class="appoint-info-item">{{item.siteInfo}}</p>
+            <p class="appoint-info-item">{{item.appoint.perCost}}元</p>
           </div>
           <div class="bottom">
-            <p class="text">正在寻找球友({{item.hasCount}}/{{item.allCount}})</p>
+            <p class="text">正在寻找球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
             <div class="btn-wrap">
-              <button class="btn" :class="{'btn-join': item.isJoin}" type="item.isJoin ? 'primary': 'default'" size="mini" :loading="item.loading"
-                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> {{item.isJoin? '我要退出' : '我要报名'}} </button>
+              <button class="btn" :class="{'btn-join': item.hasJoin}" type="item.hasJoin ? 'primary': 'default'" size="mini" :loading="item.loading"
+                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> {{item.hasJoin? '我要退出' : '我要报名'}} </button>
             </div>
           </div>
         </div>
@@ -44,23 +44,7 @@
 
     data () {
       return {
-        appoints: [{
-          appointId: '',
-          avatar: 'https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKtqOJw7icrJiaED1y6rVMTLNQFJwY9oFo5V0lnyqicnEicZSdZzoE07p7p7zANQPkDu5tiaP3u31iaVj7w/0',
-          nickName: 'harrison',
-          appointTime: '2018/04/16 15:00',
-          siteId: 0,
-          siteTitle: '西南交大南区足球场',
-          siteType: '11',
-          latitude: '',
-          longitude: '',
-          hasCount: 5,
-          allCount: 11,
-          cost: '30元/人',
-          disabled: false,
-          loading: false,
-          isJoin: false
-        }]
+        appoints: []
       }
     },
     computed: {
@@ -87,6 +71,12 @@
     methods: {
       ...mapActions(['updateSites']),
       ...mapMutations([LOGIN_IN, LOGIN_OUT]),
+      _showAppointSiteInfo (siteId) {
+        let site = this._.find(this.sites, ['id', siteId])
+        let result = site.title + '  ' + site.siteType + '人制'
+        console.log('_showAppointSiteInfo', result)
+        return result
+      },
       _toLoginPage () {
         API.navigateTo({
           url: '/pages/login/login'
@@ -94,25 +84,33 @@
       },
       async _getAppoints () {
         let res = await API.service.getAppoints()
+        this.appoints = this._.reduce(res.data, (appoints, data) => {
+          let site = this._.find(this.sites, ['id', data.appoint.siteId])
+          let siteInfo = site.title + '  ' + site.siteType + '人制'
+          let formatTime = this.$moment(data.appoint.appointTime).format('YYYY-MM-DD hh:ss')
+          let newAppoint = this._.assign(data, {siteInfo, formatTime})
+          appoints.push(newAppoint)
+          return appoints
+        }, [])
         console.log('getAppoints', res)
       },
       _tapLogic (item) {
         API.showModal({
           title: '提示',
-          content: item.isJoin ? '确认退出该约球活动？' : '确认报名？'
+          content: item.hasJoin ? '确认退出该约球活动？' : '确认报名？'
         }).then(res => {
           if (res.confirm) { // 点击了确认
             item.loading = true
             item.disabled = true
             setTimeout(function () {
               API.showToast({
-                title: item.isJoin ? '退出成功' : '加入成功',
+                title: item.hasJoin ? '退出成功' : '加入成功',
                 icon: 'success',
                 duration: 2000
               })
               item.loading = false
               item.disabled = false
-              item.isJoin = !item.isJoin
+              item.hasJoin = !item.hasJoin
             }, 1500)
           }
         })
