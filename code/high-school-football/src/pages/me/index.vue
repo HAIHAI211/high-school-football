@@ -17,7 +17,10 @@
         <span class="title">我的消息</span>
       </div>
       <div class="item">
-        <span class="title">我的约球记录</span>
+        <span class="title">我创建的约球</span>
+      </div>
+      <div class="item">
+        <span class="title">我参与的约球</span>
       </div>
     </div>
     <m-bottom-bar active="me"></m-bottom-bar>

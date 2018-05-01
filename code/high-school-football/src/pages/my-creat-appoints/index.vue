@@ -3,10 +3,10 @@
     <scroll-view class="scroll-view" scroll-y @bindscrolltoupper="_upper" @bindscrolltolower="_lower" @bindscroll="scroll">
       <div class="appoint-list">
         <div class="item" v-for="(item,index) in appoints" :key="item.id">
-          <div class="creator-info">
-            <image class="avatar" lazy-load :src="item.creator.avatar"/>
-            <span class="title">{{item.creator.name}}</span>
-          </div>
+          <!--<div class="creator-info">-->
+            <!--<image class="avatar" lazy-load :src="item.creator.avatar"/>-->
+            <!--<span class="title">{{item.creator.name}}</span>-->
+          <!--</div>-->
           <div class="appoint-info">
             <p class="appoint-info-item">{{item.formatTime}}</p>
             <p class="appoint-info-item">{{item.siteInfo}}</p>
@@ -25,11 +25,9 @@
         <m-loading></m-loading>
       </div>
       <div class="empty" v-if="!appoints.length && !loading">
-        暂无新的活动
+        暂无数据
       </div>
     </scroll-view>
-    <div class="add-btn" @click="_tapAdd">+</div>
-    <m-bottom-bar active="appoint"></m-bottom-bar>
   </div>
 </template>
 
@@ -162,22 +160,9 @@
   #appoint
     position fixed
     top 0
-    bottom 78rpx
+    bottom 0
     left 0
     right 0
-    .add-btn
-      position fixed
-      bottom 90rpx
-      right 20rpx
-      width 100rpx
-      height 100rpx
-      border-radius 50%
-      background $color-theme
-      color #000
-      display flex
-      align-items center
-      justify-content center
-      font-size $font-size-large-x
     .scroll-view
       height: 100%
       .empty

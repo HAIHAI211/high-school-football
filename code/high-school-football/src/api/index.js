@@ -98,6 +98,28 @@ API.service = {
         'content-type': 'application/json'
       }
     })
+  },
+  async joinAppoint (appointId) {
+    console.log('要加入的appointId = ', appointId)
+    return API.request({
+      url: USE_ORIGIN + 'appoint/join',
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: 'sessionId=' + GET_SESSION() + '&appointId=' + appointId
+    })
+  },
+  async leaveAppoint (item) {
+    let appointId = item.id
+    return API.request({
+      url: USE_ORIGIN + 'appoint/leave',
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: 'sessionId=' + GET_SESSION() + '&appointId=' + appointId
+    })
   }
 }
 export default API
