@@ -6,15 +6,15 @@
            @markertap="_markertap" @updated="_updated"></map>
       <div class="show-all-site" @click="showSiteList=true"><span class="text">查看所有球场</span><image class="icon" src="/static/arrow-up.png"></image></div>
       <div class="selected-site" v-if="selectedMarker">
-        <m-site-item :marker="selectedMarker" :location-lat="locationLat" :location-lng="locationLng"></m-site-item>
+        <m-site-item :marker="selectedMarker" :location-lat="locationLat" :location-lng="locationLng"/>
       </div>
     </div>
     <div class="site-list-wrap" v-if="showSiteList">
       <div class="hide-all-site" @click="showSiteList=false"><span class="text">返回查看地图</span><image class="icon" src="/static/arrow-up.png"></image></div>
-      <scroll-view class="site-scroll-view">
+      <scroll-view class="site-scroll-view" scroll-y>
         <div class="site-list">
           <m-site-item :marker="mark" :location-lat="locationLat"
-                       :location-lng="locationLng" v-for="mark in markers" :key="mark.id"></m-site-item>
+                       :location-lng="locationLng" v-for="mark in markers" :key="mark.id"/>
         </div>
       </scroll-view>
     </div>
@@ -25,7 +25,7 @@
 <script>
   import MBottomBar from 'components/m-bottom-bar/m-bottom-bar'
   import MSiteItem from 'components/m-site-item/m-site-item'
-  import API from 'api/index'
+  import API from 'api'
   import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
   import {UPDATE_SELECTED_SITE_ID} from 'store/mutation-types'
   export default {
@@ -111,8 +111,10 @@
     .site-list-wrap
       position absolute
       z-index 2
-      width 100%
-      height 100%
+      top 0
+      bottom 78rpx
+      left 0
+      right 0
       background $color-background
       .hide-all-site
         display flex
@@ -127,4 +129,6 @@
           width 40rpx
           height 40rpx
           transform rotate(180deg)
+      .site-scroll-view
+        height 100%
 </style>

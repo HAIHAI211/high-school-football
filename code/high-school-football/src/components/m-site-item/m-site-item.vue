@@ -10,7 +10,7 @@
           <span class="address">{{marker.address}}</span>
         </div>
         <div class="right-wrap">
-          <span class="detail">球场详情>></span>
+          <span class="detail" @click="c">导航>></span>
           <span class="distance" v-if="locationLng!== 0">{{distance}}公里</span>
         </div>
       </div>
@@ -29,6 +29,7 @@
 <script>
   import {getDistance} from 'common/js/map.js'
   import {turfType, siteQuality} from 'pages/site/config'
+  // import API from 'api'
   export default {
     props: {
       marker: {
@@ -55,6 +56,20 @@
         let result = getDistance(this.locationLng, this.locationLat, this.marker.longitude, this.marker.latitude)
         result = (result / 1000).toFixed(2)
         return result
+      }
+    },
+    methods: {
+      c () {
+        // wx.toast(this.marker.longitude)
+        // API.showToast({
+        //   icon: 'none',
+        //   title: this.marker.longitude + ''
+        // })
+        wx.openLocation({
+          latitude: this.marker.latitude,
+          longitude: this.marker.longitude,
+          scale: 28
+        })
       }
     }
   }
