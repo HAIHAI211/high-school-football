@@ -126,8 +126,8 @@ API.service = {
       data: 'sessionId=' + GET_SESSION() + '&appointId=' + appointId
     })
   },
-  async leaveAppoint (item) {
-    let appointId = item.id
+  async leaveAppoint (appointId) {
+    console.log('要离开的appointId = ', appointId)
     return API.request({
       url: USE_ORIGIN + 'appoint/leave',
       method: 'POST',

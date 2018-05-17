@@ -111,24 +111,13 @@
         if (res.confirm) { // 点击了确认
           item.loading = true
           item.disabled = true
-          let res1 = await API.service.leaveAppoint(item.appoint.id)
-          console.log('res1', res1)
-          const code = res1.data.code
-          const msg = res1.data.msg
-          if (code !== 0) { // 退出出了问题
-            API.showToast({
-              title: msg,
-              icon: 'none',
-              duration: 2000
-            })
-          } else {
-            API.showToast({
-              title: '退出成功',
-              icon: 'success',
-              duration: 2000
-            })
-            this.appoints.splice(index, 1)
-          }
+          await API.service.leaveAppoint(item.appoint.id)
+          API.showToast({
+            title: '退出成功',
+            icon: 'success',
+            duration: 2000
+          })
+          this.appoints.splice(index, 1)
           item.loading = false
           item.disabled = false
         }
