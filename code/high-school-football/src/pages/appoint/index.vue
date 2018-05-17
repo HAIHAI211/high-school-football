@@ -107,20 +107,16 @@
         }, [])
         console.log('getAppoints', res)
       },
-      async _tapLogic (item) {
+      async _tapLogic (item, index) {
         let res = await API.showModal({
           title: '提示',
-          content: item.hasJoin ? '确认退出该约球活动？' : '确认报名？'
+          content: '确认报名？'
         })
         if (res.confirm) { // 点击了确认
           item.loading = true
           item.disabled = true
           let res1
-          if (item.hasJoin) {
-            res1 = await API.service.leaveAppoint(item.appoint.id)
-          } else {
-            res1 = await API.service.joinAppoint(item.appoint.id)
-          }
+          res1 = await API.service.joinAppoint(item.appoint.id)
           console.log('res1', res1)
           const code = res1.data.code
           const msg = res1.data.msg
@@ -132,14 +128,18 @@
             })
           } else {
             API.showToast({
-              title: item.hasJoin ? '退出成功' : '加入成功',
+              title: '加入成功',
               icon: 'success',
               duration: 2000
             })
-            item.hasJoin = !item.hasJoin
+            this.appoints.splice(index, 1)
           }
           item.loading = false
           item.disabled = false
+          let url = {
+            url: '/pages/my-join-appoints/my-join-appoints'
+          }
+          API.navigateTo(url)
         }
       },
       _tap (index) {
@@ -150,7 +150,7 @@
           return
         }
         let item = this.appoints[index]
-        this._tapLogic(item)
+        this._tapLogic(item, index)
       },
       _tapAdd () {
         console.log('_tapAdd isLogin', this.isLogin)
