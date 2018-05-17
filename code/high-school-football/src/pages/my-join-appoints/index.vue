@@ -3,24 +3,23 @@
     <scroll-view class="scroll-view" scroll-y @bindscrolltoupper="_upper" @bindscrolltolower="_lower" @bindscroll="scroll">
       <div class="appoint-list">
         <div class="item" v-for="(item,index) in appoints" :key="item.id">
+          <div class="creator-info">
+            <image class="avatar" lazy-load :src="item.creator.avatar"/>
+            <span class="title">{{item.creator.name}}</span>
+          </div>
           <div class="appoint-info">
             <p class="appoint-info-item">{{item.formatTime}}</p>
             <p class="appoint-info-item">{{item.siteInfo}}</p>
             <p class="appoint-info-item">{{item.appoint.perCost}}元</p>
           </div>
           <div class="bottom">
-            <p class="text" v-if="item.appoint.status !== 3">正在寻找球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
-            <p class="text text-canceled" v-if="item.appoint.status === 3">需要球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
+            <p class="text">正在寻找球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
             <div class="btn-wrap">
-              <button class="btn btn-canceled" v-if="item.appoint.status === 3" size="mini"
-                      disabled hover-class="other-button-hover"> 已取消 </button>
-
-              <button class="btn" v-if="item.appoint.status!==3" size="mini" :loading="item.loading"
-                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> 取消 </button>
+              <!--<button class="btn" :class="{'btn-join': item.hasJoin}" type="item.hasJoin ? 'primary': 'default'" size="mini" :loading="item.loading"-->
+                      <!--:disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> {{item.hasJoin? '我要退出' : '我要报名'}} </button>-->
+              <button class="btn btn-join" type="primary" size="mini" :loading="item.loading"
+                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover">我要退出</button>
             </div>
-          </div>
-          <div class="users">
-            <image class="avatar" lazy-load :src="user.avatar" v-for="(user,i) in item.users" :key="i"/>
           </div>
         </div>
       </div>
@@ -31,6 +30,7 @@
         暂无数据
       </div>
     </scroll-view>
+    <m-bottom-bar active="me"></m-bottom-bar>
   </div>
 </template>
 
@@ -89,7 +89,7 @@
       },
       async _getAppoints () {
         this.loading = true
-        let res = await API.service.getMyCreatAppoints()
+        let res = await API.service.getMyJoinAppoints()
         this.loading = false
         this.appoints = this._.reduce(res.data, (appoints, data) => {
           let site = this._.find(this.sites, ['id', data.appoint.siteId])
@@ -103,21 +103,32 @@
         }, [])
         console.log('getAppoints', res)
       },
-      async _tapLogic (item) {
+      async _tapLogic (item, index) {
         let res = await API.showModal({
           title: '提示',
-          content: '确认取消？'
+          content: '确认退出该约球活动？'
         })
         if (res.confirm) { // 点击了确认
           item.loading = true
           item.disabled = true
-          await API.service.cancelAppoint(item.appoint.id)
-          item.appoint.status = 3
-          API.showToast({
-            title: '取消成功',
-            icon: 'success',
-            duration: 2000
-          })
+          let res1 = await API.service.leaveAppoint(item.appoint.id)
+          console.log('res1', res1)
+          const code = res1.data.code
+          const msg = res1.data.msg
+          if (code !== 0) { // 退出出了问题
+            API.showToast({
+              title: msg,
+              icon: 'none',
+              duration: 2000
+            })
+          } else {
+            API.showToast({
+              title: '退出成功',
+              icon: 'success',
+              duration: 2000
+            })
+            this.appoints.splice(index, 1)
+          }
           item.loading = false
           item.disabled = false
         }
@@ -130,14 +141,7 @@
           return
         }
         let item = this.appoints[index]
-        this._tapLogic(item)
-      },
-      _tapAdd () {
-        console.log('_tapAdd isLogin', this.isLogin)
-        let url = {
-          url: this.isLogin ? '/pages/appoint-add/appoint-add' : '/pages/login/login'
-        }
-        API.navigateTo(url)
+        this._tapLogic(item, index)
       }
     }
   }
@@ -149,9 +153,22 @@
   #appoint
     position fixed
     top 0
-    bottom 0
+    bottom 78rpx
     left 0
     right 0
+    .add-btn
+      position fixed
+      bottom 90rpx
+      right 20rpx
+      width 100rpx
+      height 100rpx
+      border-radius 50%
+      background $color-theme
+      color #000
+      display flex
+      align-items center
+      justify-content center
+      font-size $font-size-large-x
     .scroll-view
       height: 100%
       .empty
@@ -201,8 +218,6 @@
             .text
               color $color-theme
               font-size $font-size-medium
-              &.text-canceled
-                color gray
             .btn-wrap
               .btn
                 background transparent
@@ -213,17 +228,9 @@
                 overflow hidden
                 font-weight 300
                 letter-spacing .5px
-                &.btn-canceled
-                  border-color gray
-                  color gray
-          .users
-            display flex
-            flex-wrap wrap
-            .avatar
-              background-size cover
-              width 88rpx
-              height 88rpx
-              border-radius 50%
-              margin-right 15rpx
+                &.btn-join
+                  border none
+                  background $color-theme
+                  color #000
 
 </style>

@@ -19,7 +19,7 @@
       <div class="item" @click="_tapCreated">
         <span class="title">我创建的约球</span>
       </div>
-      <div class="item">
+      <div class="item" @click="_tapJoined">
         <span class="title">我参与的约球</span>
       </div>
     </div>
@@ -56,6 +56,13 @@
         console.log('_tapCreated')
         let url = {
           url: '/pages/my-creat-appoints/my-creat-appoints'
+        }
+        API.navigateTo(url)
+      },
+      _tapJoined () {
+        console.log('_tapJoined', '/pages/my-join-appoints/my-join-appoints')
+        let url = {
+          url: '/pages/my-join-appoints/my-join-appoints'
         }
         API.navigateTo(url)
       }

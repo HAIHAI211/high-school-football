@@ -2,7 +2,7 @@
   <div id="appoint">
     <scroll-view class="scroll-view" scroll-y @bindscrolltoupper="_upper" @bindscrolltolower="_lower" @bindscroll="scroll">
       <div class="appoint-list">
-        <div class="item" v-for="(item,index) in appoints" :key="item.id">
+        <div class="item" v-for="(item,index) in appoints" :key="item.id" v-if="!item.hasJoin">
           <div class="creator-info">
             <image class="avatar" lazy-load :src="item.creator.avatar"/>
             <span class="title">{{item.creator.name}}</span>
@@ -15,8 +15,8 @@
           <div class="bottom">
             <p class="text">正在寻找球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
             <div class="btn-wrap">
-              <button class="btn" :class="{'btn-join': item.hasJoin}" type="item.hasJoin ? 'primary': 'default'" size="mini" :loading="item.loading"
-                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> {{item.hasJoin? '我要退出' : '我要报名'}} </button>
+              <button class="btn" type="default" size="mini" :loading="item.loading"
+                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> 我要报名</button>
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@
         console.log('未登录哦')
         this._toLoginPage()
       } else {
-        this._getCreatAppoints()
+        // this._getCreatAppoints()
         if (this._.isEmpty(this.sites)) {
           console.log('sites为空 现在去请求sites')
           this.updateSites().then(res => {
@@ -87,10 +87,10 @@
           url: '/pages/login/login'
         })
       },
-      async _getCreatAppoints () {
-        let res = await API.service.getMyCreatAppoints()
-        console.log(res)
-      },
+      // async _getCreatAppoints () {
+      //   let res = await API.service.getMyCreatAppoints()
+      //   console.log(res)
+      // },
       async _getAppoints () {
         this.loading = true
         let res = await API.service.getAppoints()

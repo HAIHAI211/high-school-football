@@ -136,6 +136,16 @@ API.service = {
       },
       data: 'sessionId=' + GET_SESSION() + '&appointId=' + appointId
     })
+  },
+  async cancelAppoint (id) {
+    return API.request({
+      url: USE_ORIGIN + 'appoint/cancel',
+      method: 'POST',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: 'sessionId=' + GET_SESSION() + '&appointId=' + id
+    })
   }
 }
 export default API

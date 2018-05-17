@@ -6,6 +6,6 @@ app.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '我创建的约球'
+    navigationBarTitleText: '我参与的约球'
   }
 }
