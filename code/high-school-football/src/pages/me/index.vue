@@ -16,7 +16,7 @@
       <div class="item">
         <span class="title">我的消息</span>
       </div>
-      <div class="item">
+      <div class="item" @click="_tapCreated">
         <span class="title">我创建的约球</span>
       </div>
       <div class="item">
@@ -51,6 +51,13 @@
       },
       _loginInOut () {
         this.isLogin ? this[LOGIN_OUT]() : this._toLoginPage()
+      },
+      _tapCreated () {
+        console.log('_tapCreated')
+        let url = {
+          url: '/pages/my-creat-appoints/my-creat-appoints'
+        }
+        API.navigateTo(url)
       }
     },
     computed: {

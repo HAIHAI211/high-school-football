@@ -15,9 +15,12 @@
           <div class="bottom">
             <p class="text">正在寻找球友({{item.appoint.hasCount}}/{{item.appoint.allCount}})</p>
             <div class="btn-wrap">
-              <button class="btn" :class="{'btn-join': item.hasJoin}" type="item.hasJoin ? 'primary': 'default'" size="mini" :loading="item.loading"
-                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> {{item.hasJoin? '我要退出' : '我要报名'}} </button>
+              <button class="btn" v-if="item.appoint.status!==3" size="mini" :loading="item.loading"
+                      :disabled="item.disabled" @tap="_tap(index)" hover-class="other-button-hover"> 取 消 </button>
             </div>
+          </div>
+          <div class="users">
+            <image class="avatar" lazy-load :src="user.avatar" v-for="(user,i) in item.users"/>
           </div>
         </div>
       </div>
@@ -86,13 +89,15 @@
       },
       async _getAppoints () {
         this.loading = true
-        let res = await API.service.getAppoints()
+        let res = await API.service.getMyCreatAppoints()
         this.loading = false
         this.appoints = this._.reduce(res.data, (appoints, data) => {
           let site = this._.find(this.sites, ['id', data.appoint.siteId])
           let siteInfo = site.title + '  ' + site.siteType + '人制'
           let formatTime = this.$moment(data.appoint.appointTime).format('YYYY-MM-DD hh:ss')
-          let newAppoint = this._.assign(data, {siteInfo, formatTime})
+          let loading = false
+          let disabled = false
+          let newAppoint = this._.assign(data, {siteInfo, formatTime, loading, disabled})
           appoints.push(newAppoint)
           return appoints
         }, [])
@@ -101,7 +106,7 @@
       async _tapLogic (item) {
         let res = await API.showModal({
           title: '提示',
-          content: item.hasJoin ? '确认退出该约球活动？' : '确认报名？'
+          content: item.hasJoin ? '确认取消？' : '确认报名？'
         })
         if (res.confirm) { // 点击了确认
           item.loading = true
@@ -222,9 +227,18 @@
                 overflow hidden
                 font-weight 300
                 letter-spacing .5px
-                &.btn-join
+                &.btn-canceled
                   border none
                   background $color-theme
                   color #000
+          .users
+            display flex
+            flex-wrap wrap
+            .avatar
+              background-size cover
+              width 88rpx
+              height 88rpx
+              border-radius 50%
+              margin-right 15rpx
 
 </style>

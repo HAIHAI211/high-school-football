@@ -99,6 +99,22 @@ API.service = {
       }
     })
   },
+  async getMyCreatAppoints () {
+    return API.request({
+      url: USE_ORIGIN + 'appoint/findMyCreat' + '?' + 'sessionId=' + GET_SESSION(),
+      header: {
+        'content-type': 'application/json'
+      }
+    })
+  },
+  async getMyJoinAppoints () {
+    return API.request({
+      url: USE_ORIGIN + 'appoint/findMyJoin' + '?' + 'sessionId=' + GET_SESSION(),
+      header: {
+        'content-type': 'application/json'
+      }
+    })
+  },
   async joinAppoint (appointId) {
     console.log('要加入的appointId = ', appointId)
     return API.request({

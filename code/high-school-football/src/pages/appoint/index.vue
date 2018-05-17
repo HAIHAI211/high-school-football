@@ -62,6 +62,7 @@
         console.log('未登录哦')
         this._toLoginPage()
       } else {
+        this._getCreatAppoints()
         if (this._.isEmpty(this.sites)) {
           console.log('sites为空 现在去请求sites')
           this.updateSites().then(res => {
@@ -86,6 +87,10 @@
           url: '/pages/login/login'
         })
       },
+      async _getCreatAppoints () {
+        let res = await API.service.getMyCreatAppoints()
+        console.log(res)
+      },
       async _getAppoints () {
         this.loading = true
         let res = await API.service.getAppoints()
@@ -94,7 +99,9 @@
           let site = this._.find(this.sites, ['id', data.appoint.siteId])
           let siteInfo = site.title + '  ' + site.siteType + '人制'
           let formatTime = this.$moment(data.appoint.appointTime).format('YYYY-MM-DD hh:ss')
-          let newAppoint = this._.assign(data, {siteInfo, formatTime})
+          let loading = false
+          let disabled = false
+          let newAppoint = this._.assign(data, {siteInfo, formatTime, loading, disabled})
           appoints.push(newAppoint)
           return appoints
         }, [])
