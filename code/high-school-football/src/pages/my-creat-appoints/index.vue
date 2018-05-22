@@ -40,6 +40,11 @@
   import API from 'api/index'
   import {mapState, mapActions, mapMutations} from 'vuex'
   import {LOGIN_IN, LOGIN_OUT} from 'store/mutation-types'
+  import isEmpty from 'lodash/isEmpty'
+  import find from 'lodash/find'
+  import reduce from 'lodash/reduce'
+  import assign from 'lodash/assign'
+
   export default {
     components: {
       MBottomBar,
@@ -63,7 +68,7 @@
         console.log('未登录哦')
         this._toLoginPage()
       } else {
-        if (this._.isEmpty(this.sites)) {
+        if (isEmpty(this.sites)) {
           console.log('sites为空 现在去请求sites')
           this.updateSites().then(res => {
             this._getAppoints()
@@ -77,7 +82,7 @@
       ...mapActions(['updateSites']),
       ...mapMutations([LOGIN_IN, LOGIN_OUT]),
       _showAppointSiteInfo (siteId) {
-        let site = this._.find(this.sites, ['id', siteId])
+        let site = find(this.sites, ['id', siteId])
         let result = site.title + '  ' + site.siteType + '人制'
         console.log('_showAppointSiteInfo', result)
         return result
@@ -91,17 +96,16 @@
         this.loading = true
         let res = await API.service.getMyCreatAppoints()
         this.loading = false
-        this.appoints = this._.reduce(res.data, (appoints, data) => {
-          let site = this._.find(this.sites, ['id', data.appoint.siteId])
+        this.appoints = reduce(res.data, (appoints, data) => {
+          let site = find(this.sites, ['id', data.appoint.siteId])
           let siteInfo = site.title + '  ' + site.siteType + '人制'
           let formatTime = this.$moment(data.appoint.appointTime).format('YYYY-MM-DD hh:ss')
           let loading = false
           let disabled = false
-          let newAppoint = this._.assign(data, {siteInfo, formatTime, loading, disabled})
+          let newAppoint = assign(data, {siteInfo, formatTime, loading, disabled})
           appoints.push(newAppoint)
           return appoints
         }, [])
-        console.log('getAppoints', res)
       },
       async _tapLogic (item) {
         let res = await API.showModal({
@@ -133,7 +137,6 @@
         this._tapLogic(item)
       },
       _tapAdd () {
-        console.log('_tapAdd isLogin', this.isLogin)
         let url = {
           url: this.isLogin ? '/pages/appoint-add/appoint-add' : '/pages/login/login'
         }

@@ -28,6 +28,7 @@
   import API from 'api'
   import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
   import {UPDATE_SELECTED_SITE_ID} from 'store/mutation-types'
+  import isEmpty from 'lodash/isEmpty'
   export default {
     components: {
       MBottomBar,
@@ -37,9 +38,6 @@
       return {
         locationLng: 0,
         locationLat: 0,
-        // lng: 103.9929342270,
-        // lat: 30.7616777222,
-        // markers: markers,
         showLocation: true,
         showSiteList: false
       }
@@ -50,8 +48,7 @@
     },
     mounted () {
       this._getLocation()
-      if (this._.isEmpty(this.sites)) {
-        console.log('sites为空 现在去请求sites')
+      if (isEmpty(this.sites)) {
         this.updateSites()
       }
     },
@@ -64,11 +61,9 @@
         API.getLocation().then(res => {
           this.locationLng = res.longitude
           this.locationLat = res.latitude
-          console.log('locationLng', this.locationLng)
         })
       },
       _markertap (e) {
-        console.log('markerTap', e.mp.markerId)
         this[UPDATE_SELECTED_SITE_ID](e.mp.markerId)
       },
       _updated () {

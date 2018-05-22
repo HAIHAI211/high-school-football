@@ -39,7 +39,6 @@
       ...mapMutations([LOGIN_IN, UPDATE_USER]),
       ...mapActions(['loginByCode']),
       onGotUserInfo (e) {
-        console.log('用户信息', e.mp.detail.userInfo)
         this[UPDATE_USER](e.mp.detail.userInfo)
         this.btnText = '正在登录...'
         this._login()
@@ -50,7 +49,6 @@
           this.loading = false
           this.disabled = false
           this.btnText = '使用微信账号登录'
-          console.log('userInfo', res.userInfo)
           this[UPDATE_USER](res.userInfo)
           this.disabled = false
         })
@@ -58,7 +56,6 @@
       async _login () { // 此时还没有登录
         this.loading = true
         this.disabled = true
-
         // 判断本地sessionKey是否存在
         // 标准 但是复杂
         const sessionId = GET_SESSION()
@@ -82,9 +79,6 @@
           this.loginByCode()
         }
       }
-    },
-    mounted () {
-      // this._getUserInfo()
     }
   }
 </script>

@@ -2,11 +2,11 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import 'common/stylus/index.styl'
-import _ from 'lodash'
+// import _ from 'lodash/core.min'
 import moment from 'moment'
 Vue.config.productionTip = false
 Vue.prototype.$store = store
-Vue.prototype._ = _
+// Vue.prototype._ = _
 Vue.prototype.$moment = moment
 App.mpType = 'app'
 
@@ -24,33 +24,5 @@ export default {
       navigationBarTitleText: '校园足球服务平台',
       navigationBarTextStyle: 'white'
     }
-    // tabBar: {
-    //   color: 'rgba(255, 255, 255, 0.5)',
-    //   selectedColor: '#ffcd32',
-    //   backgroundColor: '#222',
-    //   borderStyle: '',
-    //   list: [{
-    //     pagePath: 'pages/news/news',
-    //     text: '资讯',
-    //     iconPath: '',
-    //     selectedIconPath: ''
-    //   }, {
-    //     pagePath: 'pages/site/site',
-    //     text: '场馆',
-    //     iconPath: '',
-    //     selectedIconPath: ''
-    //   }, {
-    //     pagePath: 'pages/appoint/appoint',
-    //     text: '约球',
-    //     iconPath: '',
-    //     selectedIconPath: ''
-    //   }, {
-    //     pagePath: 'pages/me/me',
-    //     text: '我的',
-    //     iconPath: '',
-    //     selectedIconPath: ''
-    //   }],
-    //   position: 'bottom'
-    // }
   }
 }

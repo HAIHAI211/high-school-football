@@ -1,6 +1,6 @@
 import {LOGIN_IN, UPDATE_SITES, UPDATE_SELECTED_SITE_ID} from './mutation-types'
 import API from 'api'
-import _ from 'lodash'
+import isEmpty from 'lodash/isEmpty'
 import {SET_SESSION} from 'utils'
 
 export default {
@@ -11,7 +11,7 @@ export default {
       let res = await API.service.loginWithCode(wxLoginRes.code, state.userInfo.avatarUrl, state.userInfo.nickName)
       console.log('xx res', res)
       let result = res.data
-      if (!_.isEmpty(result.data)) {
+      if (!isEmpty(result.data)) {
         SET_SESSION(result.data)
         commit(LOGIN_IN)
       }

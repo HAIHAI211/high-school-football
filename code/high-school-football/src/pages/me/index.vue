@@ -37,7 +37,6 @@
       MBottomBar,
       MUserInfo
     },
-
     data () {
       return {
       }

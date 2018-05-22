@@ -62,7 +62,7 @@
   import API from 'api/index'
   import {mapState, mapActions} from 'vuex'
   import {GET_SESSION} from 'utils'
-  // import {UPDATE_SITES} from 'store/mutation-types'
+  import isEmpty from 'lodash/isEmpty'
   export default {
     components: {
     },
@@ -88,7 +88,7 @@
       ...mapState(['sites'])
     },
     mounted () {
-      if (this._.isEmpty(this.sites)) {
+      if (isEmpty(this.sites)) {
         this.updateSites()
       }
     },
