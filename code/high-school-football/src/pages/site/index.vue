@@ -1,16 +1,16 @@
 <template>
   <div id="site" v-if="markers.length">
     <div class="site-map-wrap" v-if="!showSiteList">
-      <map class="map" :longitude="lng" :latitude="lat"
+      <map class="map" :longitude="selectedMarker.longitude" :latitude="selectedMarker.latitude"
            :markers="markers" :show-location="showLocation"
            @markertap="_markertap" @updated="_updated"></map>
-      <div class="show-all-site" @click="showSiteList=true"><span class="text">查看所有球场</span><image class="icon" src="/static/arrow-up.png"></image></div>
+      <div class="show-all-site" @click="showSiteList=true"><span class="text">查看所有球场</span><image class="icon" src="http://img-1255752606.piccd.myqcloud.com/arrow-up.png"></image></div>
       <div class="selected-site" v-if="selectedMarker">
         <m-site-item :marker="selectedMarker" :location-lat="locationLat" :location-lng="locationLng"/>
       </div>
     </div>
     <div class="site-list-wrap" v-if="showSiteList">
-      <div class="hide-all-site" @click="showSiteList=false"><span class="text">返回查看地图</span><image class="icon" src="/static/arrow-up.png"></image></div>
+      <div class="hide-all-site" @click="showSiteList=false"><span class="text">返回查看地图</span><image class="icon" src="http://img-1255752606.piccd.myqcloud.com/arrow-up.png"></image></div>
       <scroll-view class="site-scroll-view" scroll-y>
         <div class="site-list">
           <m-site-item :marker="mark" :location-lat="locationLat"
@@ -37,8 +37,8 @@
       return {
         locationLng: 0,
         locationLat: 0,
-        lng: 103.9929342270,
-        lat: 30.7616777222,
+        // lng: 103.9929342270,
+        // lat: 30.7616777222,
         // markers: markers,
         showLocation: true,
         showSiteList: false

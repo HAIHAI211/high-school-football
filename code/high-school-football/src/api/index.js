@@ -44,9 +44,9 @@ Object.keys(wx).forEach((key) => {
     })
   }
 })
-const TEST_ORIGIN = 'http://localhost:8081/'
-// const TRUE_ORIGIN = 'https://blogharrison.com/hsfthree/'
-const USE_ORIGIN = TEST_ORIGIN
+// const TEST_ORIGIN = 'http://localhost:8081/'
+const TRUE_ORIGIN = 'https://blogharrison.com/football/'
+const USE_ORIGIN = TRUE_ORIGIN
 API.service = {
   async getNews () {
     return API.request({
