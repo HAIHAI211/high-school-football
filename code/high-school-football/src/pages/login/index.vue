@@ -5,7 +5,7 @@
     </div>
     <div class="btn-wrap"  v-if="!isLogin">
       <button class="login-btn" type="primary" size="default" :loading="loading"
-              :disabled="disabled" @tap="_login"> {{btnText}} </button>
+              :disabled="disabled" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo"> {{btnText}} </button>
     </div>
     <div class="icon-wrap" v-if="isLogin">
       <icon type="success" :size="size"/>
@@ -26,10 +26,10 @@
     },
     data () {
       return {
-        loading: true,
-        disabled: true,
+        loading: false,
+        disabled: false,
         size: 50,
-        btnText: '正在加载'
+        btnText: '获取用户信息'
       }
     },
     computed: {
@@ -38,6 +38,12 @@
     methods: {
       ...mapMutations([LOGIN_IN, UPDATE_USER]),
       ...mapActions(['loginByCode']),
+      onGotUserInfo (e) {
+        console.log('用户信息', e.mp.detail.userInfo)
+        this[UPDATE_USER](e.mp.detail.userInfo)
+        this.btnText = '正在登录...'
+        this._login()
+      },
       _getUserInfo () {
         // 调用登录接口
         API.getUserInfo().then(res => {
@@ -78,7 +84,7 @@
       }
     },
     mounted () {
-      this._getUserInfo()
+      // this._getUserInfo()
     }
   }
 </script>
